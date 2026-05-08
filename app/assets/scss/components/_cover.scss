@@ -1,76 +1,58 @@
 @use '../mixins' as *;
 
-@mixin img {
+$radius-m3-medium: 12px; // Recommended for book covers
+$radius-m3-large: 16px; // Use for 2xl/3xl if you want a softer look
+
+@mixin m3-cover-base($radius: $radius-m3-medium) {
+	aspect-ratio: 2 / 3;
+	border-radius: $radius;
+	background-color: var(--outline);
+	flex-shrink: 0;
+	overflow: hidden; // Ensures the img doesn't bleed past the radius
+
 	img {
 		width: 100%;
 		height: 100%;
-		border-radius: 5px;
+		object-fit: cover; // Prevents distortion
+		border-radius: inherit;
 	}
-}
-
-[class^='cover-'] {
-	background-color: var(--outline);
-	border-radius: 5px;
-	aspect-ratio: 2/3;
 }
 
 .cover-xs {
 	width: 56px;
-	height: 80px;
-
-	@include img();
+	@include m3-cover-base();
 }
 
 .cover-md {
 	width: 96px;
-
-	@include img();
+	@include m3-cover-base();
 }
 
 .cover-xl {
 	width: 156px;
-
-	@include img();
+	@include m3-cover-base();
 }
 
 .cover-2xl {
 	width: 256px;
-	aspect-ratio: 2/3;
-	border-radius: 5px;
+	@include m3-cover-base($radius-m3-large);
 }
 
 .cover-3xl {
 	width: 512px;
-
-	@include img();
+	@include m3-cover-base($radius-m3-large);
 }
 
 .cover-auto {
 	width: 156px;
-	border-radius: 5px;
-
-	@include img();
+	@include m3-cover-base();
 
 	@include mobile {
 		width: 116px;
-		aspect-ratio: 2/3;
 	}
 }
 
 .cover-big {
 	width: clamp(156px, 20vw, 256px);
-	aspect-ratio: 2 / 3;
-	border-radius: 5px;
-	flex-shrink: 0;
-
-	@include img();
-}
-
-.cover-xs,
-.cover-md,
-.cover-xl,
-.cover-2xl,
-.cover-3xl,
-.cover-auto {
-	flex: 0 0 auto;
+	@include m3-cover-base($radius-m3-large);
 }

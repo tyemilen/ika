@@ -41,7 +41,7 @@ const { user } = useUser();
 		</div>
 		<button
 			@click="showCreateShelf = true"
-			class="w-12 h-12 tertiary rounded-full! flex justify-center items-center fixed bottom-16 right-2"
+			class="w-12 h-12 tertiary flex justify-center items-center fixed bottom-16 right-2"
 		>
 			<span class="pi pi-plus"></span>
 		</button>

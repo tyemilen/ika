@@ -49,11 +49,15 @@ const { data: lastBook } = useLazyFetch('/api/users/@me/history/last');
 
 	<div v-for="book in freshFeed" class="flex break-all">
 		<NuxtLink :to="`/books/${book.slug}`">
-			<BookCoverComponent :book-id="book.id" :id="book.covers.find((c) => c.isPrimary)!.id" />
+			<BookCoverComponent
+				class="cover-xl"
+				:book-id="book.id"
+				:id="book.covers.find((c) => c.isPrimary)!.id"
+			/>
 		</NuxtLink>
 	</div>
 
-	<div class="flex flex-col gap-4 pt-5 bg-red-500" :class="{ 'is-loading': status == 'pending' }">
+	<div class="flex flex-col gap-4 pt-5" :class="{ 'is-loading': status == 'pending' }">
 		<div class="flex flex-col md:flex-row gap-4 w-full" v-if="chapters">
 			<BookSectionVertiComponent class="w-full md:w-1/2" :chapters="chapters[0]" />
 			<BookSectionVertiComponent

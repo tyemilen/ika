@@ -100,8 +100,8 @@ const primaryCover = computed<string>(() => {
 					</button>
 				</template>
 				<template #list>
-					<p>Save</p>
-					<p>Upload chapter</p>
+					<p @click="showSaveModal = true">Save</p>
+					<p @click="showCChapterModal = true">Upload chapter</p>
 					<p>Share</p>
 				</template>
 			</MenuComponent>

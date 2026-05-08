@@ -7,7 +7,7 @@ defineProps<{
 }>();
 </script>
 <template>
-	<div class="flex flex-col gap-2 bg-(--bg-secondary) p-2 rounded-sm">
+	<div class="flex flex-col gap-2 bg-(--surface-container-low) p-2 rounded-sm">
 		<NuxtLink
 			class="flex gap-2 shrink-0 w-full"
 			v-for="(chapter, i) in chapters"

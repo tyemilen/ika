@@ -15,5 +15,8 @@
 			"path": "./.nuxt/tsconfig.node.json"
 		}
 	],
-	"include": ["db/**/*", "scripts/*"]
+	"include": ["db/**/*", "scripts/*"],
+	"compilerOptions": {
+		"lib": ["ESNext", "DOM"]
+	}
 }

@@ -48,7 +48,7 @@ watch(isOpen, async (open) => {
 		</div>
 		<Transition name="fade-down">
 			<div
-				class="flex flex-col bg-(--surface-container-low) absolute top-[110%] whitespace-nowrap rounded-sm menu z-10"
+				class="flex flex-col bg-(--surface-container-lowest) absolute top-[110%] whitespace-nowrap rounded-sm menu z-10"
 				:style="menuStyle"
 				ref="menuRef"
 				v-if="isOpen"
