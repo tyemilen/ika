@@ -1,0 +1,1 @@
+ALTER TABLE "chapters"."chapters" ADD COLUMN "pages_count" integer NOT NULL;

@@ -1,0 +1,40 @@
+@use 'sass:color';
+
+.status {
+	width: fit-content;
+	padding: 0.25rem;
+	font-size: 14px;
+	font-weight: 500;
+	border-radius: 4px;
+	font-family: monospace;
+	text-transform: uppercase;
+	$mix-color: var(--notification-mix-color);
+
+	&-completed {
+		$color: var(--color-info);
+
+		background-color: color-mix(in srgb, $color, $mix-color 85%);
+		color: $color;
+	}
+
+	&-cancelled {
+		$color: var(--color-error);
+
+		background-color: color-mix(in srgb, $color, $mix-color 85%);
+		color: $color;
+	}
+
+	&-ongoing {
+		$color: var(--color-success);
+
+		background-color: color-mix(in srgb, $color, $mix-color 85%);
+		color: $color;
+	}
+
+	&-paused {
+		$color: var(--color-warning);
+
+		background-color: color-mix(in srgb, $color, $mix-color 85%);
+		color: $color;
+	}
+}

@@ -1,0 +1,55 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1777356587158,
+      "tag": "0000_green_ben_urich",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777356592941,
+      "tag": "0001_seed_meta",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777395492818,
+      "tag": "0002_neat_kulan_gath",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1777395510963,
+      "tag": "0003_basic_notifications",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1777589033047,
+      "tag": "0004_glorious_roulette",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1777589392784,
+      "tag": "0005_greedy_yellow_claw",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1777592860015,
+      "tag": "0006_living_millenium_guard",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+$theme: (
+	primary: #226488,
+	on-primary: #ffffff,
+
+	secondary: #4f616e,
+	on-secondary: #ffffff,
+
+	tertiary: #226488,
+	on-tertiary: #ffffff,
+
+	primary-container: #c7e7ff,
+	on-primary-container: #004c6c,
+
+	secondary-container: #d2e5f5,
+	on-secondary-container: #374955,
+
+	tertiary-container: #c7e7ff,
+	on-tertiary-container: #004c6c,
+
+	surface-dim: #d7dadf,
+	surface: #f6fafe,
+	surface-bright: #f6fafe,
+	surface-container-lowest: #ffffff,
+	surface-container-low: #f1f4f9,
+	surface-container: #ebeef3,
+	surface-container-high: #e5e8ed,
+	surface-container-highest: #dfe3e7,
+	on-surface: #181c20,
+	on-surface-v: #41484d,
+
+	outline: #71787e,
+	outline-v: #c1c7ce,
+
+	inverse-surface: #2d3135,
+	inverse-on-surface: #eef1f6,
+	inverse-primary: #93cdf6,
+
+	scrim: #000000,
+	shadow: #000000,
+
+	star: #ffaa0c,
+	love: #ff8fd4,
+
+	bg-overlay: rgba(0, 0, 0, 0.1),
+	bg-reader: #ffffff,
+	bg-reader-header: #232323,
+
+	notification-mix-color: white,
+
+	color-success: #6fffa4,
+	color-warning: #ffc35b,
+	color-error: #ff6767,
+	color-info: #76d4ff,
+
+	border-radius-small: 4px,
+	border-radius: 4px,
+	header-height: 64px,
+
+	loading-bg: rgb(212, 212, 212),
+	loading-gradient: linear-gradient(90deg, rgb(243, 243, 243) 10%, rgb(206, 206, 206) 49%),
+	status-online: rgb(122, 255, 122),
+	status-away: rgb(255, 255, 137),
+	status-dnd: rgb(255, 107, 107),
+	status-offline: rgb(116, 116, 116),
+);

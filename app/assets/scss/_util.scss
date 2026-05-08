@@ -1,0 +1,17 @@
+.no-scrollbar {
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+
+.centered {
+	margin: 0 auto;
+}
+
+.h-sscreen {
+	height: 100vh;
+	height: 100dvh;
+}

@@ -1,0 +1,41 @@
+const MIN_RATING = 1;
+const MAX_RATING = 10;
+
+const MAX_COMMENT_LENGTH = 512;
+
+const PUBLICATION_STATUS = ['ongoing', 'completed', 'paused', 'cancelled'] as const;
+
+const MAX_PROFILE_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_CHAPTER_PAGE_SIZE = 30 * 1024 * 1024;
+const MAX_CHAPTER_SIZE = 300 * 1024 * 1024;
+const MAX_BOOK_COVER_SIZE = 30 * 1024 * 1024;
+
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+export const WS_CODES = {
+	TIMEOUT: 1001,
+	STATUS: 1002,
+	NOTIFICATION: 1003,
+};
+
+const MAX_REVIEW_LENGTH = 6192;
+
+export const NOTIFICATION_TYPES = ['my_book_status_update', 'new_chapter'] as const;
+
+const MAX_READING_INTERVAL_UPDATE = 10 * (60 * 1000);
+
+export default {
+	MIN_RATING,
+	MAX_RATING,
+	MAX_COMMENT_LENGTH,
+	NOTIFICATION_TYPES,
+	WS_CODES,
+	PUBLICATION_STATUS,
+	MAX_PROFILE_FILE_SIZE,
+	MAX_CHAPTER_PAGE_SIZE,
+	MAX_CHAPTER_SIZE,
+	MAX_BOOK_COVER_SIZE,
+	ACCEPTED_IMAGE_TYPES,
+	MAX_REVIEW_LENGTH,
+	MAX_READING_INTERVAL_UPDATE,
+};

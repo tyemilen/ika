@@ -1,0 +1,42 @@
+input[type='text'],
+input[type='password'],
+input[type='email'],
+input[type='number'] {
+	padding: 0.5rem;
+	outline: none;
+	background-color: var(--surface-container);
+	border-radius: var(--border-radius);
+	&:focus {
+		border-color: var(--tertiary);
+	}
+
+	&:disabled {
+		user-select: none;
+	}
+}
+
+input[type='number'] {
+	-moz-appearance: textfield;
+	appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type='file']::file-selector-button {
+	padding: 10px;
+	border: none;
+	border-radius: 5px;
+	color: var(--primary);
+	background-color: var(--primary);
+	font-weight: 600;
+	cursor: pointer;
+}
+
+input[type='file']:disabled::file-selector-button {
+	background-color: var(--text-disabled);
+	cursor: not-allowed;
+}

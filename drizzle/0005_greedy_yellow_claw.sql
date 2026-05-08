@@ -1,0 +1,1 @@
+CREATE INDEX "reading_history_user_updated_idx" ON "users"."reading_history" USING btree ("user_id","updated_at" DESC NULLS LAST);

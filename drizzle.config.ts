@@ -1,0 +1,11 @@
+import 'dotenv/config';
+import { defineConfig } from 'drizzle-kit';
+
+export default defineConfig({
+	dialect: 'postgresql',
+	schema: './db/schema',
+	out: './drizzle',
+	dbCredentials: {
+		url: 'postgres://squidy:secure_password@db/squid',
+	},
+});

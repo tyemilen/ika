@@ -1,0 +1,26 @@
+.slide-next-enter-active,
+.slide-next-leave-active,
+.slide-prev-enter-active,
+.slide-prev-leave-active {
+	transition:
+		transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+		opacity 0.6s;
+	position: absolute;
+	width: 100%;
+	top: 0;
+	left: 0;
+}
+
+.slide-next-enter-from {
+	transform: translateX(100%);
+}
+.slide-next-leave-to {
+	transform: translateX(-100%);
+}
+
+.slide-prev-enter-from {
+	transform: translateX(-100%);
+}
+.slide-prev-leave-to {
+	transform: translateX(100%);
+}

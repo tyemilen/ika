@@ -1,0 +1,54 @@
+@use 'themes/white' as theme-white;
+@use 'themes/dark' as theme-dark;
+
+@use 'components/modal';
+@use 'components/button';
+@use 'components/input';
+@use 'components/textarea';
+@use 'components/cover';
+@use 'components/chip';
+@use 'components/status';
+@use 'components/spinner';
+
+@use 'transitions/fade-down';
+@use 'transitions/fade';
+@use 'transitions/slide';
+
+@use 'util';
+@use 'base';
+
+$themes: (
+	'light': theme-white.$theme,
+	'dark': theme-dark.$theme,
+);
+
+body,
+html {
+	color: var(--on-surface);
+	background: var(--surface);
+	height: 100vh;
+	width: 100vw;
+	white-space: pre-wrap;
+}
+
+@each $name, $map in $themes {
+	$selector: if(
+		sass($name == 'light'): ':root' ; else: '[data-theme="#{$name}"]',
+	);
+
+	#{$selector} {
+		@each $key, $val in $map {
+			--#{$key}: #{$val};
+		}
+	}
+
+	@if $name == 'dark' {
+		@media (prefers-color-scheme: dark) {
+			:root:not([data-theme='light']) {
+				@each $key, $val in $map {
+					--#{$key}: #{$val};
+				}
+			}
+		}
+	}
+}
