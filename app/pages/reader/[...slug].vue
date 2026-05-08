@@ -123,10 +123,10 @@ const calculateCurrentTotalSeconds = () => {
 	return Math.floor(sessionMs / 1000);
 };
 
-const sendAnalytics = async () => {
+const sendAnalytics = async (sPageId?: string) => {
 	if (isSyncing || !bookId || !chapterId) return;
 
-	const pageId = chapter.value?.pages[active.value];
+	const pageId = sPageId || chapter.value?.pages[active.value];
 	if (!pageId) return;
 
 	const totalSessionSeconds = calculateCurrentTotalSeconds();
@@ -175,7 +175,6 @@ const historyInterval = setInterval(sendAnalytics, constants.MAX_READING_INTERVA
 
 const goToPage = (pageIndex: number) => {
 	if (!pages.value) return;
-
 	if (pageIndex < 0) {
 		if (chapter.value?.prev) {
 			router.push(`/reader/${bookId}/${chapter.value.prev.id}/last`);
@@ -214,6 +213,17 @@ watchDebounced(
 	},
 	{ debounce: 300, immediate: true },
 );
+
+watch(active, async (_, oldPageIndex) => {
+	const pageIdToSync = pages.value[oldPageIndex];
+	if (pageIdToSync) {
+		await sendAnalytics(pageIdToSync);
+	}
+
+	totalActiveMs = 0;
+	timeAlreadySynced = 0;
+	lastResumeTime = Date.now();
+});
 
 onMounted(async () => {
 	setTimeout(() => {
