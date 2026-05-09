@@ -11,17 +11,26 @@ const { data: shelf, status } = useLazyFetch<LibraryShelfResponse>(`/api/library
 		class="flex flex-col gap-4 self-start w-[95%] md:w-[70%] centered"
 		:class="{ 'is-loading': status == 'pending' }"
 	>
-		<div class="flex flex-col gap-2">
-			<h3>{{ shelf?.name }}</h3>
-			<div class="flex gap-2">
-				<div class="w-6 h-6 rounded-full flex items-center">
-					<UserAvatarComponent
-						v-if="shelf"
-						class="rounded-full w-6 h-6"
-						:id="shelf.owner.id"
-					/>
+		<div class="flex gap-2">
+			<ShelfCoverComponent
+				v-if="shelf"
+				class="cover-md"
+				:id="id"
+				:user-id="shelf.owner.id"
+				:type="shelf.type"
+			/>
+			<div class="flex flex-col gap-2">
+				<h3>{{ shelf?.name }}</h3>
+				<div class="flex gap-2">
+					<div class="w-6 h-6 rounded-full flex items-center">
+						<UserAvatarComponent
+							v-if="shelf"
+							class="rounded-full w-6 h-6"
+							:id="shelf.owner.id"
+						/>
+					</div>
+					<p>{{ shelf?.owner.username }}</p>
 				</div>
-				<p>{{ shelf?.owner.username }}</p>
 			</div>
 		</div>
 

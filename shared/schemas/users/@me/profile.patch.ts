@@ -11,7 +11,7 @@ export const MyProfilePatchBodySchema = z.object({
 			'Only Latin, Cyrillic, numbers, and underscores allowed',
 		)
 		.optional(),
-	bio: z.string().min(1).max(256).optional(),
+	bio: z.string().min(1).max(52).optional(),
 	avatar: z
 		.file()
 		.mime(constants.ACCEPTED_IMAGE_TYPES)

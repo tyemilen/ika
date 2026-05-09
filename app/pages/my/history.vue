@@ -17,9 +17,9 @@ const { data, status } = useLazyFetch('/api/users/@me/history');
 				</div>
 
 				<div class="flex gap-2 items-center">
-					<div class="w-full h-2 bg-(--bg-secondary) rounded-full">
+					<div class="w-full h-2 bg-(--primary-container) rounded-full">
 						<div
-							class="h-full bg-(--color-primary) rounded-full"
+							class="h-full bg-(--on-primary-container) rounded-full"
 							:style="{ width: `${entry.progress}%` }"
 						></div>
 					</div>

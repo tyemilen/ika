@@ -77,51 +77,50 @@ const ttw = computed(() => {
 				:id="profile.id"
 			/>
 
-			<div class="flex gap-2">
-				<div class="flex flex-col shrink-0 gap-2">
-					<UserAvatarComponent
-						v-if="profile"
-						:id="profile.id"
-						class="w-26 h-26 md:w-56 md:h-56 -mt-12 rounded-md border-2 border-(--surface)"
-					/>
+			<div class="flex gap-2 break-all">
+				<UserAvatarComponent
+					v-if="profile"
+					:id="profile.id"
+					class="w-26 h-26 md:w-56 md:h-56 -mt-12 rounded-md border-2 border-(--surface)"
+				/>
+				<p>{{ profile?.bio }}</p>
+			</div>
+			<div class="flex flex-col gap-2 w-full">
+				<div class="flex flex-col">
+					<p class="font-bold">{{ profile?.display_name }}</p>
+					<p>@{{ profile?.username }}</p>
 				</div>
-				<div class="flex flex-col gap-2 w-full">
-					<div class="flex flex-col">
-						<p class="font-bold">{{ profile?.display_name }}</p>
-						<p>@{{ profile?.username }}</p>
+
+				<div class="flex justify-between items-center flex-1">
+					<div class="flex flex-col self-end">
+						<p>ttw</p>
+						<p class="font-bold text-(--primary) text-lg">{{ ttw }}</p>
+					</div>
+					<div class="flex flex-col self-end">
+						<p>Liked books</p>
+						<p class="font-bold text-(--primary) text-lg">{{ profile?.likes }}</p>
 					</div>
 
-					<div class="flex justify-between items-center flex-1">
-						<div class="flex flex-col self-end">
-							<p>ttw</p>
-							<p class="font-bold text-(--primary) text-lg">{{ ttw }}</p>
-						</div>
-						<div class="flex flex-col self-end">
-							<p>Liked books</p>
-							<p class="font-bold text-(--primary) text-lg">{{ profile?.likes }}</p>
-						</div>
-
-						<div class="flex">
-							<MenuComponent name="book-more" :stretch="true">
-								<template #activator>
-									<button class="relative h-12">
-										<span class="pi pi-ellipsis-h"></span>
-									</button>
-								</template>
-								<template #list>
-									<p v-if="isMyself" @click="showProfileSettings = true">
-										Profile settings
-									</p>
-								</template>
-							</MenuComponent>
-						</div>
+					<div class="flex">
+						<MenuComponent name="book-more" :stretch="true">
+							<template #activator>
+								<button class="relative h-12">
+									<span class="pi pi-ellipsis-h"></span>
+								</button>
+							</template>
+							<template #list>
+								<p v-if="isMyself" @click="showProfileSettings = true">
+									Profile settings
+								</p>
+							</template>
+						</MenuComponent>
 					</div>
 				</div>
 			</div>
 		</div>
+		<hr />
 
 		<template v-if="profile?.compatibility != undefined">
-			<hr />
 			<div class="flex gap-2 relative">
 				<svg
 					class="h-12 w-12"
@@ -152,7 +151,7 @@ const ttw = computed(() => {
 				</svg>
 				<div class="flex flex-col">
 					<p>
-						Вкус схож на <span class="font-bold">{{ profile.compatibility.value }}</span
+						<span class="font-bold">{{ profile.compatibility.value }}</span
 						>%
 					</p>
 				</div>
@@ -160,16 +159,16 @@ const ttw = computed(() => {
 			<div class="flex flex-col gap-2">
 				<div
 					v-for="book in profile.compatibility.books"
-					class="flex gap-2 p-1 bg-(--primary-container) text-(--on-primary-container)"
+					class="flex gap-2 primary-container"
 				>
 					<BookCoverComponent class="cover-xs" :book-id="book.id" :id="book.coverId" />
 					<div class="flex flex-col">
 						<p class="font-bold">{{ book.title }}</p>
 						<p>
-							{{ profile.username }} потратил
-							{{ formatSeconds(book.targetTime) }} своей жизни
+							{{ profile.username }} spent
+							{{ formatSeconds(book.targetTime) }}
 						</p>
-						<p>Ты {{ formatSeconds(book.myTime) }}</p>
+						<p>u {{ formatSeconds(book.myTime) }}</p>
 					</div>
 				</div>
 			</div>
@@ -181,10 +180,13 @@ const ttw = computed(() => {
 				v-for="shelf in profile?.shelves"
 				:to="`/profile/${profile?.username}/shelves/${shelf.id}`"
 			>
-				<div class="cover-md">
-					<img v-if="shelf.type == 'liked'" src="~/assets/img/likedShelf.svg" />
-					<ShelfCoverComponent v-else-if="profile" :user-id="profile.id" :id="shelf.id" />
-				</div>
+				<ShelfCoverComponent
+					v-if="profile"
+					class="cover-md"
+					:user-id="profile.id"
+					:id="shelf.id"
+					:type="shelf.type"
+				/>
 			</NuxtLink>
 		</div>
 	</template>

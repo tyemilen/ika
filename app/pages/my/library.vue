@@ -11,10 +11,13 @@ const { user } = useUser();
 		<div class="flex flex-row flex-wrap gap-2">
 			<div class="flex gap-2 w-full" v-for="shelf in shelves">
 				<NuxtLink :to="`/profile/${user?.username}/shelves/${shelf.id}`">
-					<div class="cover-md">
-						<img v-if="shelf.type == 'liked'" src="~/assets/img/likedShelf.svg" />
-						<ShelfCoverComponent v-else-if="user" :user-id="user.id" :id="shelf.id" />
-					</div>
+					<ShelfCoverComponent
+						v-if="user"
+						class="cover-md"
+						:user-id="user.id"
+						:id="shelf.id"
+						:type="shelf.type"
+					/>
 				</NuxtLink>
 
 				<div class="flex w-full h-fit justify-between break-all">
