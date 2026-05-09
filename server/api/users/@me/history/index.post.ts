@@ -32,7 +32,6 @@ export default defineEventHandler(async (event): Promise<BaseSuccessResponse> =>
 		.values({
 			userId: user.id,
 			bookId: data.bookId,
-			lastChapterId: data.chapterId,
 			lastPageId: data.pageId,
 			timeSpent: data.timeSpent,
 			updatedAt: new Date(),
@@ -40,7 +39,6 @@ export default defineEventHandler(async (event): Promise<BaseSuccessResponse> =>
 		.onConflictDoUpdate({
 			target: [readingHistory.userId, readingHistory.bookId],
 			set: {
-				lastChapterId: data.chapterId,
 				lastPageId: data.pageId,
 				timeSpent: sql`${readingHistory.timeSpent} + ${data.timeSpent}`,
 				updatedAt: new Date(),

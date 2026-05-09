@@ -18,18 +18,20 @@ export default defineEventHandler(async (event): Promise<UsersMeHistoryEntryResp
 					covers: true,
 				},
 			},
-			lastChapter: {
-				columns: {
-					id: true,
-					name: true,
-					number: true,
-					langId: true,
-					pagesCount: true,
-				},
-			},
 			lastPage: {
 				columns: {
 					number: true,
+				},
+				with: {
+					chapter: {
+						columns: {
+							id: true,
+							name: true,
+							number: true,
+							langId: true,
+							pagesCount: true,
+						},
+					},
 				},
 			},
 		},
@@ -40,7 +42,7 @@ export default defineEventHandler(async (event): Promise<UsersMeHistoryEntryResp
 			statusCode: 404,
 		});
 
-	const totalPagesInChapter = historyRaw.lastChapter.pagesCount || 1;
+	const totalPagesInChapter = historyRaw.lastPage.chapter.pagesCount || 1;
 	const currentPageProgress = (historyRaw.lastPage.number / totalPagesInChapter) * 100;
 	const progress = Math.min(Math.round(currentPageProgress), 100);
 
@@ -51,8 +53,8 @@ export default defineEventHandler(async (event): Promise<UsersMeHistoryEntryResp
 			title: historyRaw.book.titles.find((t) => t.isPrimary)!.title,
 		},
 		chapter: {
-			id: historyRaw.lastChapterId,
-			name: historyRaw.lastChapter.name,
+			id: historyRaw.lastPage.chapter.id,
+			name: historyRaw.lastPage.chapter.name,
 		},
 		timeSpent: -1,
 		pageNumber: historyRaw.lastPage.number,

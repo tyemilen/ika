@@ -1,5 +1,5 @@
 import { relations, sql } from 'drizzle-orm';
-import { uuid, text, timestamp, index, integer, numeric, real } from 'drizzle-orm/pg-core';
+import { uuid, text, timestamp, index, integer, numeric } from 'drizzle-orm/pg-core';
 
 import { booksSchema } from './schema';
 import { descriptions } from './descriptions';
@@ -26,6 +26,7 @@ export const bookStatusEnum = booksSchema.enum('book_status', [
 	'queue',
 	'rejected',
 	'published',
+	'hidden',
 ]);
 export type BookStatus = (typeof bookStatusEnum.enumValues)[number];
 

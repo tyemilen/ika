@@ -14,9 +14,12 @@ defineProps<{
 			:key="i"
 			:to="`/reader/${chapter.bookId}/${chapter.id}/1`"
 		>
-			<div class="cover-md">
-				<NuxtImg provider="covers" :src="chapter.cover" />
-			</div>
+			<BookCoverComponent
+				v-if="chapter.bookId && chapter.coverId"
+				class="cover-md"
+				:book-id="chapter.bookId"
+				:id="chapter.coverId"
+			/>
 			<div class="flex flex-col gap-1 flex-1">
 				<div class="font-medium">{{ chapter.name }}</div>
 				<p class="grow">

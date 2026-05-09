@@ -24,7 +24,7 @@ export interface BaseChapterResponse {
 	volume: number;
 	author: BaseUserResponse;
 	bookId?: string;
-	cover?: string;
+	coverId?: string;
 	createdAt?: number;
 }
 

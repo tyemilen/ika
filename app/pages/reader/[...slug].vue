@@ -136,7 +136,6 @@ const sendAnalytics = async (sPageId?: string) => {
 
 	const data: MyHistoryPostBody = {
 		bookId,
-		chapterId,
 		pageId,
 		timeSpent,
 	};

@@ -35,7 +35,7 @@ const { data: lastBook } = useLazyFetch('/api/users/@me/history/last');
 		<NuxtLink
 			v-if="lastBook"
 			:to="`/reader/${lastBook.book.id}/${lastBook.chapter.id}/${lastBook.pageNumber}`"
-			class="p-2 w-[50%] primary-container shadow-lg rounded-md flex flex-col gap-4 justify-center items-center fixed bottom-16 right-2 z-10"
+			class="p-2 w-[50%] secondary-container shadow-lg rounded-md flex flex-col gap-4 justify-center items-center fixed bottom-16 right-2 z-10"
 		>
 			<div class="flex items-center w-full gap-2">
 				<span class="pi pi-book text-xl"></span>
@@ -43,9 +43,9 @@ const { data: lastBook } = useLazyFetch('/api/users/@me/history/last');
 			</div>
 
 			<div class="flex w-full gap-2 items-center">
-				<div class="w-full h-2 bg-(--on-primary-container)/20 rounded-full">
+				<div class="w-full h-2 bg-(--on-secondary-container)/20 rounded-full">
 					<div
-						class="h-full bg-(--on-primary-container) rounded-full"
+						class="h-full bg-(--on-secondary-container) rounded-full"
 						:style="{ width: `${lastBook.progress}%` }"
 					></div>
 				</div>
@@ -90,15 +90,32 @@ const { data: lastBook } = useLazyFetch('/api/users/@me/history/last');
 		</button>
 	</div>
 
-	<div class="flex flex-col gap-4" :class="{ 'is-loading': status == 'pending' }">
-		<div class="flex flex-col md:flex-row gap-4 w-full" v-if="chapters">
-			<BookSectionVertiComponent class="w-full md:w-1/2" :chapters="chapters[0]" />
-			<BookSectionVertiComponent
-				class="w-full md:w-1/2"
-				v-if="chapters[1].length"
-				:chapters="chapters[1]"
-			/>
-		</div>
-		<!-- <BookSectionHorizComponent></BookSectionHorizComponent> -->
+	<div class="flex flex-col md:flex-row gap-4 w-full" v-if="chapters">
+		<BookSectionVertiComponent class="w-full md:w-1/2" :chapters="chapters[0]" />
+		<BookSectionVertiComponent
+			class="w-full md:w-1/2"
+			v-if="chapters[1].length"
+			:chapters="chapters[1]"
+		/>
 	</div>
+	<h2>Trending rn</h2>
+	<NuxtLink
+		v-for="(book, index) in feed?.trending"
+		:to="`/books/${book.slug}`"
+		class="primary-container flex flex-col gap-2"
+	>
+		<h3>{{ index + 1 }}.</h3>
+		<div class="flex gap-4 items-start">
+			<BookCoverComponent
+				class="cover-md shrink-0"
+				:book-id="book.id"
+				:id="book.covers.find((c) => c.isPrimary)!.id"
+			/>
+			<div class="flex flex-col">
+				<h3>{{ book.titles[0]?.content }}</h3>
+				<p>{{ book.descriptions[0]?.content }}</p>
+			</div>
+		</div>
+	</NuxtLink>
+	<!-- <BookSectionHorizComponent></BookSectionHorizComponent> -->
 </template>
