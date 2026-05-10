@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 export default defineNuxtConfig({
 	compatibilityDate: '2026-04-21',
-	ssr: false,
+	ssr: true,
 	devtools: {
 		enabled: false,
 		vscode: {
@@ -33,11 +33,11 @@ export default defineNuxtConfig({
 		},
 
 		public: {
-			coversCdnBase: 'http://is-silly.lan:8333/book-covers',
-			avatarsCdnBase: 'http://is-silly.lan:8333/user-avatars',
-			bannersCdnBase: 'http://is-silly.lan:8333/user-banners',
-			pagesCdnBase: 'http://is-silly.lan:8333/chapter-pages',
-			shelfCoversCdnBase: 'http://is-silly:8333/shelf-covers',
+			coversCdnBase: 'https://cdn.rawr.rs/book-covers',
+			avatarsCdnBase: 'https://cdn.rawr.rs/user-avatars',
+			bannersCdnBase: 'https://cdn.rawr.rs/user-banners',
+			pagesCdnBase: 'https://cdn.rawr.rs/chapter-pages',
+			shelfCoversCdnBase: 'https://cdn.rawr.rs/shelf-covers',
 		},
 	},
 	app: {
@@ -89,7 +89,7 @@ export default defineNuxtConfig({
 			},
 		},
 		server: {
-			allowedHosts: ['is-silly.lan'],
+			allowedHosts: ['is-silly.lan', 'ika.rawr.rs'],
 		},
 	},
 	image: {

@@ -3,12 +3,13 @@
 $radius-medium: 12px;
 $radius-large: 16px;
 
-@mixin m3-cover-base($radius: $radius-medium) {
+@mixin cover-base($radius: $radius-medium) {
 	aspect-ratio: 2 / 3;
 	border-radius: $radius;
 	background-color: var(--outline);
 	flex-shrink: 0;
 	overflow: hidden;
+	align-self: flex-start;
 
 	img {
 		width: 100%;
@@ -20,32 +21,32 @@ $radius-large: 16px;
 
 .cover-xs {
 	width: 56px;
-	@include m3-cover-base();
+	@include cover-base();
 }
 
 .cover-md {
 	width: 96px;
-	@include m3-cover-base();
+	@include cover-base();
 }
 
 .cover-xl {
 	width: 156px;
-	@include m3-cover-base();
+	@include cover-base();
 }
 
 .cover-2xl {
 	width: 256px;
-	@include m3-cover-base($radius-large);
+	@include cover-base($radius-large);
 }
 
 .cover-3xl {
 	width: 512px;
-	@include m3-cover-base($radius-large);
+	@include cover-base($radius-large);
 }
 
 .cover-auto {
 	width: 156px;
-	@include m3-cover-base();
+	@include cover-base();
 
 	@include mobile {
 		width: 116px;
@@ -54,5 +55,5 @@ $radius-large: 16px;
 
 .cover-big {
 	width: clamp(156px, 20vw, 256px);
-	@include m3-cover-base($radius-large);
+	@include cover-base($radius-large);
 }

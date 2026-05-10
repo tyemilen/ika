@@ -21,8 +21,6 @@ const [bookId, chapterId, page] = route.params.slug as unknown as string[];
 const { data: chapter, status } = useLazyFetch(`/api/books/${bookId}/chapter/${chapterId}`);
 
 const active = ref(Number(page) - 1);
-const reader = useTemplateRef<HTMLElement>('reader');
-
 const gateway = useGateway();
 
 watchEffect(() => {
@@ -161,7 +159,7 @@ const sendAnalytics = async (sPageId?: string) => {
 	}
 };
 
-const handleVisibilityChange = () => {
+const handleVisibilityChange = (): void => {
 	if (document.visibilityState === 'hidden') {
 		totalActiveMs += Date.now() - lastResumeTime;
 		sendAnalytics();
@@ -169,8 +167,6 @@ const handleVisibilityChange = () => {
 		lastResumeTime = Date.now();
 	}
 };
-
-const historyInterval = setInterval(sendAnalytics, constants.MAX_READING_INTERVAL_UPDATE);
 
 const goToPage = (pageIndex: number) => {
 	if (!pages.value) return;
@@ -194,37 +190,42 @@ const goToPage = (pageIndex: number) => {
 	window.history.replaceState(window.history.state, '', newPath);
 };
 
-const pageRef = useTemplateRef('pageRef');
+let historyInterval: number;
+
+const pageRef = useTemplateRef<HTMLDivElement>('pageRef');
 const commentSection = useTemplateRef<HTMLElement>('commentSection');
-const isVisible = ref(false);
-
-useIntersectionObserver(commentSection, (entries) => {
-	const entry = entries[0];
-	if (entry) {
-		isVisible.value = entry.isIntersecting && entry.intersectionRatio >= 0;
-	}
-});
-
-watchDebounced(
-	[active, pages, isVisible],
-	() => {
-		if (isVisible.value) fetchComments();
-	},
-	{ debounce: 300, immediate: true },
-);
-
-watch(active, async (_, oldPageIndex) => {
-	const pageIdToSync = pages.value[oldPageIndex];
-	if (pageIdToSync) {
-		await sendAnalytics(pageIdToSync);
-	}
-
-	totalActiveMs = 0;
-	timeAlreadySynced = 0;
-	lastResumeTime = Date.now();
-});
 
 onMounted(async () => {
+	historyInterval = window.setInterval(sendAnalytics, constants.MAX_READING_INTERVAL_UPDATE);
+
+	const isVisible = ref(false);
+
+	useIntersectionObserver(commentSection, (entries) => {
+		const entry = entries[0];
+		if (entry) {
+			isVisible.value = entry.isIntersecting && entry.intersectionRatio >= 0;
+		}
+	});
+
+	watchDebounced(
+		[active, pages, isVisible],
+		() => {
+			if (isVisible.value) fetchComments();
+		},
+		{ debounce: 300, immediate: true },
+	);
+
+	watch(active, async (_, oldPageIndex) => {
+		const pageIdToSync = pages.value[oldPageIndex];
+		if (pageIdToSync) {
+			await sendAnalytics(pageIdToSync);
+		}
+
+		totalActiveMs = 0;
+		timeAlreadySynced = 0;
+		lastResumeTime = Date.now();
+	});
+
 	setTimeout(() => {
 		if (!pageRef.value) return;
 		pageRef.value.scrollIntoView({ block: 'end' });
@@ -232,6 +233,8 @@ onMounted(async () => {
 
 	window.addEventListener('visibilitychange', handleVisibilityChange);
 	window.addEventListener('pagehide', handleVisibilityChange);
+
+	const reader = useTemplateRef<HTMLElement>('reader');
 
 	useSwipe(reader.value, {
 		threshold: 10,
@@ -259,13 +262,12 @@ onBeforeRouteLeave(async () => {
 <template>
 	<div class="flex flex-col gap-4">
 		<HeaderComponent :fixed="false" :main-ref="null" />
-		<div class="w-full flex flex-col justify-center items-center">
-			<h2>{{ chapter?.chapter.name }}</h2>
+		<div class="w-full flex flex-col gap-2 justify-center items-center">
 			<p>{{ chapter?.book.name }}</p>
+			<div class="chip">
+				Vol. {{ chapter?.chapter.volume }}, Ch. {{ chapter?.chapter.number }}
+			</div>
 			<div class="flex gap-2">
-				<div class="chip">
-					Vol. {{ chapter?.chapter.volume }}, Ch. {{ chapter?.chapter.number }}
-				</div>
 				<div>Pg {{ active + 1 }} / {{ pages?.length }}</div>
 			</div>
 		</div>

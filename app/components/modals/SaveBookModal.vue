@@ -13,15 +13,6 @@ const emit = defineEmits<{
 	close: [];
 }>();
 
-const isLocked = useScrollLock(document.body);
-
-watchEffect(() => (isLocked.value = show));
-
-const dialog = useTemplateRef('dialog');
-onClickOutside(dialog, () => emit('close'), {
-	ignore: ['.notification'],
-});
-
 const { data: resLibraries, status } = useLazyFetch('/api/library');
 
 const newShelf = ref(false);
@@ -36,6 +27,17 @@ watch(status, (newStatus) => {
 	if (newStatus == 'success') {
 		libraries.value = libraries.value.concat(resLibraries.value ?? []);
 	}
+});
+
+onMounted(() => {
+	const isLocked = useScrollLock(document.body);
+
+	watchEffect(() => (isLocked.value = show));
+
+	const dialog = useTemplateRef<HTMLDivElement>('dialog');
+	onClickOutside(dialog, () => emit('close'), {
+		ignore: ['.notification'],
+	});
 });
 </script>
 <template>

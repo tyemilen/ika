@@ -6,14 +6,19 @@ export const useUser = () => {
 	const session = useUserSession();
 
 	const logout = async () => {
-		session.clear();
-		clearNuxtData();
-		clearNuxtState();
+		try {
+			await session.clear();
 
-		await reloadNuxtApp({
-			path: '/',
-			ttl: 1000,
-		});
+			clearNuxtData();
+			clearNuxtState();
+
+			user.value = null;
+
+			await navigateTo('/');
+			window.location.reload();
+		} catch (err) {
+			console.error(err);
+		}
 	};
 
 	const fetchUser = async () => {

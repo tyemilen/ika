@@ -3,9 +3,9 @@ services:
         build:
             context: .
             target: dev
+        restart: unless-stopped
         ports:
             - '3000:3000'
-        restart: unless-stopped
         environment:
             NUXT_VALKEY_HOST: valkey
             NUXT_VALKEY_PORT: 6379
@@ -20,6 +20,8 @@ services:
         depends_on:
             - valkey
             - db
+            - seaweedfs
+
     valkey:
         image: valkey/valkey:latest
         ports:
@@ -53,15 +55,10 @@ services:
     seaweedfs:
         image: chrislusf/seaweedfs:latest
         restart: unless-stopped
-        ports:
-            - '8333:8333'
         volumes:
-            - ./s3.json:/etc/seaweedfs/s3.json
+            - ./s3.json:/etc/seaweedfs/s3.json:ro
             - seaweedfs_data:/data
-        command: >
-            server -s3 
-              -s3.config=/etc/seaweedfs/s3.json 
-              -dir=/data
+        command: 'server -s3 -s3.config=/etc/seaweedfs/s3.json -dir=/data -ip.bind=0.0.0.0'
 
 volumes:
     meili_data:

@@ -58,7 +58,7 @@ const { data: lastBook } = useLazyFetch('/api/users/@me/history/last');
 		<div
 			v-for="book in freshFeed"
 			:style="{ transform: `translateX(-${active * 100}vw)` }"
-			class="flex shrink-0 break-all w-screen transition-transform"
+			class="flex shrink-0 w-screen transition-transform"
 		>
 			<NuxtLink :to="`/books/${book.slug}`" class="flex gap-2 w-[95%] md:w-[70%]">
 				<BookCoverComponent
@@ -66,7 +66,7 @@ const { data: lastBook } = useLazyFetch('/api/users/@me/history/last');
 					:book-id="book.id"
 					:id="book.covers.find((c) => c.isPrimary)!.id"
 				/>
-				<div class="flex flex-col justify-between break-all">
+				<div class="flex flex-col justify-between min-w-0 wrap-break-word">
 					<div class="flex flex-col">
 						<h2>{{ book.titles[0]?.content }}</h2>
 						<p>{{ book.descriptions?.[0]?.content.slice(0, 156) }}...</p>

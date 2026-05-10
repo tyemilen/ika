@@ -17,16 +17,8 @@ const emit = defineEmits<{
 }>();
 
 const isLogin = ref(true);
-const isLocked = useScrollLock(document.body);
 
 const { notify } = useNotifications();
-
-watchEffect(() => (isLocked.value = show));
-
-const dialog = useTemplateRef('dialog');
-onClickOutside(dialog, () => emit('close'), {
-	ignore: ['.notification'],
-});
 
 const loginData = reactive<AuthLoginBody>({
 	email: '',
@@ -80,6 +72,17 @@ const submitRegister = async () => {
 
 	isLogin.value = true;
 };
+
+onMounted(() => {
+	const isLocked = useScrollLock(document.body);
+
+	watchEffect(() => (isLocked.value = show));
+
+	const dialog = useTemplateRef<HTMLFormElement>('dialog');
+	onClickOutside(dialog, () => emit('close'), {
+		ignore: ['.notification'],
+	});
+});
 </script>
 <template>
 	<Transition name="modal">

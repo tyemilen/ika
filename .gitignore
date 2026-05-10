@@ -29,3 +29,5 @@ logs
 .direnv
 
 data/
+*.ovpn
+docker-compose.preview.yml

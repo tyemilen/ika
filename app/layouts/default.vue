@@ -9,9 +9,16 @@ const mainRef = useTemplateRef('main');
 		<HeaderComponent :main-ref="mainRef" />
 		<div class="flex-1 relative min-h-0 overflow-y-auto overflow-x-hidden" ref="main">
 			<div
-				class="flex flex-col gap-4 w-[95%] md:w-[70%] relative centered pb-5 pt-[calc(var(--header-height)+1.25rem)]"
+				class="flex flex-col gap-4 w-[95%] md:w-[70%] h-full relative centered pt-[calc(var(--header-height)+1.25rem)]"
 			>
-				<slot />
+				<ClientOnly>
+					<slot />
+					<template #fallback>
+						<div class="w-full h-full flex items-center justify-center">
+							<div class="spinner"></div>
+						</div>
+					</template>
+				</ClientOnly>
 			</div>
 		</div>
 		<BottomPanelComponent />

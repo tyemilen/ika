@@ -214,10 +214,7 @@ onUnmounted(() => {
 			</div>
 			<div class="flex flex-col gap-2" @keydown.enter.prevent="addAltTitle">
 				<p>Alternative titles</p>
-				<div
-					class="flex gap-1 justify-center items-stretch"
-					v-for="(_, index) in altTitles"
-				>
+				<div class="flex gap-1" v-for="(_, index) in altTitles">
 					<SelectComponent
 						:options="meta?.languages"
 						placeholder="Language"
@@ -252,17 +249,15 @@ onUnmounted(() => {
 						</template>
 					</SelectComponent>
 
-					<div class="flex w-full gap-1">
-						<input
-							type="text"
-							class="flex-1"
-							v-model="altTitles[index]!.content"
-							ref="altTitleInputs"
-						/>
-						<button @click.prevent="altTitles.splice(index, 1)">
-							<span class="pi pi-trash"></span>
-						</button>
-					</div>
+					<input
+						type="text"
+						class="min-w-0"
+						v-model="altTitles[index]!.content"
+						ref="altTitleInputs"
+					/>
+					<button @click.prevent="altTitles.splice(index, 1)">
+						<span class="pi pi-trash"></span>
+					</button>
 				</div>
 				<button @click.prevent="addAltTitle()">
 					<span class="pi pi-plus"></span>

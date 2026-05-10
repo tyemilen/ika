@@ -14,13 +14,6 @@ const emit = defineEmits<{
 	close: [];
 }>();
 
-const isLocked = useScrollLock(document.body);
-
-watchEffect(() => (isLocked.value = show));
-
-const dialog = useTemplateRef('dialog');
-onClickOutside(dialog, () => emit('close'));
-
 const data = ref<Partial<BooksChapterPostBody>>({
 	number: undefined,
 	volume: undefined,
@@ -120,7 +113,6 @@ const postChapter = () => {
 
 	const result = BooksChapterPostBodySchema.safeParse(data.value);
 
-	console.log(data.value);
 	if (!result.success) {
 		const { message } = result.error.issues[0]!;
 		return notify({ type: 'error', text: `${message}` });
@@ -142,6 +134,15 @@ const postChapter = () => {
 		body: formData,
 	});
 };
+
+onMounted(() => {
+	const isLocked = useScrollLock(document.body);
+
+	watchEffect(() => (isLocked.value = show));
+
+	const dialog = useTemplateRef<HTMLDivElement>('dialog');
+	onClickOutside(dialog, () => emit('close'));
+});
 </script>
 <template>
 	<Transition name="modal">

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import UserBannerComponent from '~/components/kit/UserBannerComponent.vue';
+import Error from '~/error.vue';
 import type { UsersProfileResponse } from '~~/shared/schemas';
 
 const route = useRoute();
@@ -51,24 +52,25 @@ const formatSeconds = (seconds: number): string => {
 	const formatted = new (Intl as any).DurationFormat('en', {
 		style: 'narrow',
 	}).format(duration);
-
 	return formatted;
 };
 const ttw = computed(() => {
-	if (!profile.value) return '0';
+	if (!profile.value || !profile.value.ttw) return '0';
 
 	return formatSeconds(profile.value.ttw);
 });
 </script>
 <template>
-	<div v-if="error || status == 'idle'" class="overflow-hidden">
-		<div class="h-16 w-full flex justify-center items-center">
-			<p>404 not found</p>
-		</div>
-		<div class="absolute bottom-0 left-0 w-full">
-			<TentaclesIcon class="w-full" />
-		</div>
-	</div>
+	<Error
+		v-if="error || status == 'idle'"
+		:error="
+			createError({
+				statusCode: 404,
+				statusMessage: 'User not found',
+				fatal: false,
+			})
+		"
+	/>
 	<template v-else>
 		<div class="flex flex-col gap-2 relative" :class="{ 'is-loading': status == 'pending' }">
 			<UserBannerComponent
