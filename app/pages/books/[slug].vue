@@ -57,6 +57,15 @@ const primaryCover = computed<string>(() => {
 
 	return `${book.value.id}/${book.value.covers.find((v) => v.isPrimary)?.id}`;
 });
+
+const adminHide = async () => {
+	if (!book.value) return;
+
+	console.log(`/api/special/books/${book.value.id}/hide`);
+	await $fetchNotify(`/api/special/books/${book.value.id}/hide`, {
+		method: 'PATCH',
+	});
+};
 </script>
 <template>
 	<div class="flex flex-col gap-4" :class="{ 'is-loading': status == 'pending' }">
@@ -103,6 +112,8 @@ const primaryCover = computed<string>(() => {
 					<p @click="showSaveModal = true">Save</p>
 					<p @click="showCChapterModal = true">Upload chapter</p>
 					<p>Share</p>
+					<p>= danger zone =</p>
+					<p v-if="user?.role == 'admin'" @click="adminHide">Hide</p>
 				</template>
 			</MenuComponent>
 			<button class="secondary flex-1">READ</button>

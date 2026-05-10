@@ -1,5 +1,5 @@
 import { desc, gte, sql } from 'drizzle-orm';
-import { descriptions, readingHistory } from '~~/db';
+import { readingHistory } from '~~/db';
 import { BooksFeedResponse } from '~~/shared/schemas';
 
 export default defineCachedEventHandler(
@@ -175,7 +175,6 @@ export default defineCachedEventHandler(
 				};
 			})
 			.sort((a, b) => b.score - a.score);
-
 		return {
 			fresh,
 			chapters: chapters.map((x) => ({

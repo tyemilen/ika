@@ -35,13 +35,13 @@ const { data: lastBook } = useLazyFetch('/api/users/@me/history/last');
 		<NuxtLink
 			v-if="lastBook"
 			:to="`/reader/${lastBook.book.id}/${lastBook.chapter.id}/${lastBook.pageNumber}`"
-			class="p-2 w-[50%] secondary-container shadow-lg rounded-md flex flex-col gap-4 justify-center items-center fixed bottom-16 right-2 z-10"
+			class="p-2 w-1/2 md:w-1/4 secondary-container shadow-lg rounded-md flex flex-col gap-4 fixed bottom-16 right-2 z-10"
 		>
 			<div class="flex items-center w-full gap-2">
 				<span class="pi pi-book text-xl"></span>
 				<p>Continue reading</p>
 			</div>
-
+			<!-- <p>{{ lastBook.book.title }}</p> -->
 			<div class="flex w-full gap-2 items-center">
 				<div class="w-full h-2 bg-(--on-secondary-container)/20 rounded-full">
 					<div
@@ -104,7 +104,7 @@ const { data: lastBook } = useLazyFetch('/api/users/@me/history/last');
 		:to="`/books/${book.slug}`"
 		class="primary-container flex flex-col gap-2"
 	>
-		<h3>{{ index + 1 }}.</h3>
+		<h3>{{ index + 1 }}. {{ book.titles[0]?.content }}</h3>
 		<div class="flex gap-4 items-start">
 			<BookCoverComponent
 				class="cover-md shrink-0"
@@ -112,7 +112,6 @@ const { data: lastBook } = useLazyFetch('/api/users/@me/history/last');
 				:id="book.covers.find((c) => c.isPrimary)!.id"
 			/>
 			<div class="flex flex-col">
-				<h3>{{ book.titles[0]?.content }}</h3>
 				<p>{{ book.descriptions[0]?.content }}</p>
 			</div>
 		</div>
