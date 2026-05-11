@@ -22,6 +22,8 @@ const userStatus = ref<{ status: USER_STATUS; bookName: string | null }>({
 });
 
 export const useGateway = createGlobalState(() => {
+	if (!import.meta.client) return {};
+
 	const startReading = (bookName: string) => {
 		userStatus.value.bookName = bookName;
 	};
@@ -55,7 +57,7 @@ export const useGateway = createGlobalState(() => {
 
 	methods.send = send;
 
-	const sendStatus = () =>
+	const sendStatus = () => {
 		send({
 			code: WS_CODES.STATUS,
 			data: {
@@ -63,10 +65,14 @@ export const useGateway = createGlobalState(() => {
 				bookName: userStatus.value.bookName,
 			},
 		});
-
-	const statusInterval = useIntervalFn(sendStatus, HEARTBEAT_INTERVAL);
+	};
+	const statusInterval = useIntervalFn(sendStatus, HEARTBEAT_INTERVAL, {
+		immediate: false,
+	});
 
 	onMounted(async () => {
+		console.log('dasdsadas', loggedIn.value, elector.isLeader);
+
 		await elector.awaitLeadership();
 		await until(loggedIn).toBe(true);
 

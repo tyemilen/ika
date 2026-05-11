@@ -4,10 +4,7 @@ import { UseTimeAgo } from '@vueuse/components';
 const { data: notifications, status } = useLazyFetch('/api/users/@me/notifications');
 </script>
 <template>
-	<div
-		class="flex flex-col gap-4 w-[95%] md:w-[70%] relative centered pb-5"
-		:class="{ 'is-loading': status != 'success' }"
-	>
+	<div class="flex flex-col gap-4" :class="{ 'is-loading': status != 'success' }">
 		<h2>Notifications</h2>
 
 		<div v-for="notification in notifications" class="flex gap-2">

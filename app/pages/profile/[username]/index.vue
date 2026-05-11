@@ -19,7 +19,7 @@ const {
 	data: profile,
 	status,
 	error,
-} = await useLazyFetch<UsersProfileResponse>(`/api/users/${username.value}/profile`, {
+} = await useFetch<UsersProfileResponse>(`/api/users/${username.value}/profile`, {
 	immediate: isValid.value,
 	watch: [username],
 	headers: {
@@ -59,6 +59,8 @@ const ttw = computed(() => {
 
 	return formatSeconds(profile.value.ttw);
 });
+
+const config = useRuntimeConfig();
 </script>
 <template>
 	<Error
@@ -79,13 +81,22 @@ const ttw = computed(() => {
 				:id="profile.id"
 			/>
 
-			<div class="flex gap-2 break-all">
-				<UserAvatarComponent
-					v-if="profile"
-					:id="profile.id"
-					class="w-26 h-26 md:w-56 md:h-56 -mt-12 rounded-md border-2 border-(--surface)"
-				/>
-				<p>{{ profile?.bio }}</p>
+			<div class="flex gap-2 break-all items-start">
+				<div class="relative" v-if="profile">
+					<div
+						:style="{
+							'background-image': `url(${config.public.avatarsCdnBase}/${profile.id})`,
+						}"
+						class="w-26 h-26 bg-cover bg-center md:w-56 md:h-56 -mt-[50%] ml-2 border-5 border-(--surface) rounded-full bg-red-500"
+					>
+						<div
+							class="absolute w-6 h-6 md:w-8 md:h-8 bottom-1 right-1 md:bottom-4 md:right-4 rounded-full border-4 border-(--surface)"
+							v-if="profile"
+							:style="{ background: `var(--status-${profile.status.status})` }"
+						></div>
+					</div>
+				</div>
+				<p class="secondary-container h-fit" v-if="profile?.bio">{{ profile?.bio }}</p>
 			</div>
 			<div class="flex flex-col gap-2 w-full">
 				<div class="flex flex-col">

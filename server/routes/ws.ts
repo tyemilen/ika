@@ -60,7 +60,6 @@ export default defineWebSocketHandler({
 
 		try {
 			const msg: WsMessage<any> = message.json();
-
 			switch (msg.code) {
 				case WS_CODES.STATUS: {
 					const result = WsUserStatusMsgSchema.safeParse(msg.data);

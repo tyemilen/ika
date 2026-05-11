@@ -36,52 +36,50 @@ onMounted(() => {
 });
 </script>
 <template>
-	<ClientOnly>
-		<Transition name="drawer">
+	<Transition name="drawer">
+		<div
+			class="fixed top-0 left-0 z-102 bg-black/20 w-full h-full pointer-events-auto"
+			v-show="isOpen"
+			ref="panelCloseSwipeArea"
+		>
 			<div
-				class="fixed top-0 left-0 z-102 bg-black/20 w-full h-full pointer-events-auto"
-				v-show="isOpen"
-				ref="panelCloseSwipeArea"
+				class="panel absolute right-0 w-1/2 h-full flex flex-col gap-4 bg-(--surface) p-2"
+				ref="panel"
 			>
-				<div
-					class="panel absolute right-0 w-1/2 h-full flex flex-col gap-4 bg-(--surface) p-2"
-					ref="panel"
-				>
-					<button @click="goToPage('/')">Home</button>
-					<button @click="goToPage(`/profile/${user?.username}`)">
-						{{ user?.username }}
-					</button>
+				<button @click="goToPage('/')">Home</button>
+				<button @click="goToPage(`/profile/${user?.username}`)">
+					{{ user?.username }}
+				</button>
 
-					<div class="flex flex-col gap-2">
-						<div class="flex gap-2 items-center">
-							<span class="pi pi-book"></span>
-							<p>Books</p>
-						</div>
-						<button @click="goToPage('/search')">Search</button>
-						<button @click="goToPage('/books/latest')">Latest</button>
-						<button @click="goToPage('/books/random')">Random</button>
-						<button @click="goToPage('/create/book')">Create a book draft</button>
-						<button @click="goToPage('/my/books')">My books</button>
-						<button @click="goToPage('/my/library')">My library</button>
-						<button @click="goToPage('/my/history')">My history</button>
+				<div class="flex flex-col gap-2">
+					<div class="flex gap-2 items-center">
+						<span class="pi pi-book"></span>
+						<p>Books</p>
 					</div>
-					<div
-						class="flex flex-col gap-2"
-						v-if="user?.role == 'moderator' || user?.role == 'admin'"
-					>
-						<div class="flex gap-2 items-center">
-							<span class="pi pi-heart-fill"></span>
-							<p>for special boys</p>
-						</div>
-						<button @click="goToPage('/special/queue')">Submit queue</button>
+					<button @click="goToPage('/search')">Search</button>
+					<button @click="goToPage('/books/latest')">Latest</button>
+					<button @click="goToPage('/books/random')">Random</button>
+					<button @click="goToPage('/create/book')">Create a book draft</button>
+					<button @click="goToPage('/my/books')">My books</button>
+					<button @click="goToPage('/my/library')">My library</button>
+					<button @click="goToPage('/my/history')">My history</button>
+				</div>
+				<div
+					class="flex flex-col gap-2"
+					v-if="user?.role == 'moderator' || user?.role == 'admin'"
+				>
+					<div class="flex gap-2 items-center">
+						<span class="pi pi-heart-fill"></span>
+						<p>for special boys</p>
 					</div>
-					<div class="w-full h-full flex items-end">
-						<button class="w-full" @click="logout">logout</button>
-					</div>
+					<button @click="goToPage('/special/queue')">Submit queue</button>
+				</div>
+				<div class="w-full h-full flex items-end">
+					<button class="w-full" @click="logout">logout</button>
 				</div>
 			</div>
-		</Transition>
-	</ClientOnly>
+		</div>
+	</Transition>
 </template>
 <style lang="css" scoped>
 .drawer-enter-active,

@@ -73,52 +73,53 @@ watchDebounced(
 
 const searchInputRef = useTemplateRef('searchInput');
 
-onClickOutside(searchInputRef, () => {
-	searchResult.value = [];
+onMounted(() => {
+	onClickOutside(searchInputRef, () => {
+		searchResult.value = [];
+	});
 });
 </script>
 <template>
-	<ClientOnly>
-		<div
-			class="w-full shrink-0 flex justify-center z-100 transition-[background-color,opacity] h-(--header-height) top-0 left-0 right-0"
-			:class="{ 'header-active': isScrolled && fixed, fixed: fixed }"
-		>
-			<div class="h-full flex justify-between items-center gap-5 header w-[95%] md:w-[70%]">
-				<RouterLink to="/">
-					<SquidIcon class="w-12 h-12" />
-				</RouterLink>
-				<div class="relative w-full">
-					<input type="text" class="w-full" v-model="search" />
+	<div
+		class="w-full shrink-0 flex justify-center z-100 transition-[background-color,opacity] h-(--header-height) top-0 left-0 right-0"
+		:class="{ 'header-active': isScrolled && fixed, fixed: fixed }"
+	>
+		<div class="h-full flex items-center justify-center header w-full gap-5">
+			<RouterLink to="/">
+				<SquidIcon class="w-12 h-12" />
+			</RouterLink>
+			<div class="relative w-full md:w-[70%] flex items-center justify-center">
+				<input type="text" class="w-full h-full" v-model="search" />
 
-					<div
-						class="absolute w-full p-2 bg-(--surface) shadow-lg top-[110%] flex flex-col justify-center items-center gap-2 rounded-md"
-						ref="searchInput"
-						v-if="searching || searchResult.length"
-					>
-						<div v-if="searching" class="spinner"></div>
-						<div v-for="book in searchResult" class="flex gap-2 w-full">
-							<div class="cover-xs">
-								<BookCoverComponent :book-id="book.primaryKey" :id="book.coverId" />
-							</div>
-							<div class="flex flex-col">
-								<p>{{ book.title }}</p>
-							</div>
+				<div
+					class="absolute w-full p-2 bg-(--surface-container-lowest) shadow-lg top-[110%] flex flex-col justify-center items-center gap-2 rounded-md"
+					ref="searchInput"
+					v-if="searching || searchResult.length"
+				>
+					<div v-if="searching" class="spinner"></div>
+					<div v-for="book in searchResult" class="flex gap-2 w-full">
+						<div class="cover-xs">
+							<BookCoverComponent :book-id="book.primaryKey" :id="book.coverId" />
+						</div>
+						<div class="flex flex-col">
+							<p>{{ book.title }}</p>
 						</div>
 					</div>
 				</div>
-				<div class="flex gap-2">
+			</div>
+			<div class="flex gap-2">
+				<ClientOnly v-if="loggedIn">
 					<div
-						v-if="loggedIn"
 						class="w-12 h-12 cursor-pointer bg-(--bg-primary)/50 rounded-full flex items-center justify-center backdrop-blur-xs"
 						@click="panel.open()"
 					>
 						<span class="pi pi-bars"></span>
 					</div>
-					<button v-else @click="showLogin = true">login</button>
-				</div>
+				</ClientOnly>
+				<button v-else @click="showLogin = true">login</button>
 			</div>
 		</div>
-	</ClientOnly>
+	</div>
 
 	<Teleport to="body">
 		<LoginModal :show="showLogin" @close="showLogin = false" />

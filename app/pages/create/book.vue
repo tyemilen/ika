@@ -166,10 +166,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-	<form
-		class="flex flex-col gap-4 justify-center w-[95%] md:w-[70%] centered pb-5"
-		@submit.prevent="postBook()"
-	>
+	<form class="flex flex-col gap-4 justify-center pb-5" @submit.prevent="postBook()">
 		<h3>Create book draft</h3>
 		<div class="flex flex-col gap-4">
 			<div class="flex flex-col gap-2">
@@ -251,7 +248,7 @@ onUnmounted(() => {
 
 					<input
 						type="text"
-						class="min-w-0"
+						class="min-w-0 flex-1"
 						v-model="altTitles[index]!.content"
 						ref="altTitleInputs"
 					/>
@@ -474,7 +471,7 @@ onUnmounted(() => {
 				<div class="flex gap-1 flex-wrap">
 					<label
 						class="bg-transparent! cover-big border border-dashed border-(--text-placeholder) flex justify-center bg-cover items-center"
-						:style="{ backgroundImage: `url(${coverUrl})` }"
+						:style="{ backgroundImage: coverUrl ? `url(${coverUrl})` : 'none' }"
 					>
 						<span class="pi pi-plus"></span>
 						<input
@@ -487,7 +484,7 @@ onUnmounted(() => {
 				</div>
 			</div>
 		</div>
-		<div class="flex gap-2 w-full sticky bottom-0 bg-(--bg-primary) p-2">
+		<div class="flex gap-2 w-full sticky bottom-0 bg-(--surface) p-2">
 			<button class="flex-1 secondary">Cancel</button>
 			<button class="flex-1" type="submit">Save</button>
 		</div>
@@ -496,12 +493,7 @@ onUnmounted(() => {
 	<Teleport to="body">
 		<div class="modal-container" v-show="altDescriptionModal">
 			<div class="modal w-[90%] h-1/2">
-				<SelectComponent
-					:options="meta?.languages"
-					placeholder="Language"
-					:stretch="true"
-					class="h-fit"
-				>
+				<SelectComponent :options="meta?.languages" placeholder="Language" class="h-fit">
 					<template #item="{ option, select }">
 						<div
 							@click="
@@ -538,7 +530,7 @@ onUnmounted(() => {
 				</div>
 				<div class="flex flex-col gap-2">
 					<button @click="saveTempAltDescription()">save</button>
-					<button class="secondary">cancel</button>
+					<button @click="altDescriptionModal = false" class="secondary">cancel</button>
 				</div>
 			</div>
 		</div>

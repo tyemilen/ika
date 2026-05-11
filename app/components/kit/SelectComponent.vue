@@ -68,7 +68,6 @@ onClickOutside(optionsRef, () => (showOptions.value = false), {
 .select {
 	position: relative;
 	overflow: visible;
-	// border: 1px solid var(--outline);
 	border-radius: var(--border-radius);
 	padding: 0.5em;
 	cursor: pointer;
@@ -77,7 +76,7 @@ onClickOutside(optionsRef, () => (showOptions.value = false), {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	background-color: var(--surface-dim);
+	background-color: var(--surface-container);
 
 	.placeholder {
 		display: flex;

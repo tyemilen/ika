@@ -60,7 +60,7 @@ const { data: lastBook } = useLazyFetch('/api/users/@me/history/last');
 			:style="{ transform: `translateX(-${active * 100}vw)` }"
 			class="flex shrink-0 w-screen transition-transform"
 		>
-			<NuxtLink :to="`/books/${book.slug}`" class="flex gap-2 w-[95%] md:w-[70%]">
+			<NuxtLink :to="`/books/${book.slug}`" class="flex gap-4 w-[95%] md:w-[70%]">
 				<BookCoverComponent
 					class="cover-xl shrink-0"
 					:book-id="book.id"

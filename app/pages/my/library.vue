@@ -6,10 +6,10 @@ const { data: shelves } = useLazyFetch('/api/library');
 const { user } = useUser();
 </script>
 <template>
-	<div class="flex flex-col gap-4 w-[95%] md:w-[70%] relative centered pb-5">
+	<div class="flex flex-col gap-4 w-full relative centered pb-5">
 		<h2>Your cool ass shelves</h2>
-		<div class="flex flex-row flex-wrap gap-2">
-			<div class="flex gap-2 w-full" v-for="shelf in shelves">
+		<div class="flex flex-row flex-wrap gap-4">
+			<div class="flex gap-4 w-full" v-for="shelf in shelves">
 				<NuxtLink :to="`/profile/${user?.username}/shelves/${shelf.id}`">
 					<ShelfCoverComponent
 						v-if="user"

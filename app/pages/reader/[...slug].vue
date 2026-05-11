@@ -24,7 +24,7 @@ const active = ref(Number(page) - 1);
 const gateway = useGateway();
 
 watchEffect(() => {
-	if (chapter.value?.book) {
+	if (chapter.value?.book && gateway.startReading) {
 		gateway.startReading(chapter.value.book.name);
 	}
 	if (page == 'last' && chapter.value) {
@@ -236,7 +236,7 @@ onMounted(async () => {
 
 	const reader = useTemplateRef<HTMLElement>('reader');
 
-	useSwipe(reader.value, {
+	useSwipe(reader, {
 		threshold: 10,
 		onSwipeEnd(_, direction) {
 			if (direction == 'left') {
@@ -252,7 +252,7 @@ onUnmounted(() => {
 	clearInterval(historyInterval);
 	window.removeEventListener('visibilitychange', handleVisibilityChange);
 	window.removeEventListener('pagehide', handleVisibilityChange);
-	gateway.stopReading();
+	if (gateway.stopReading) gateway.stopReading();
 });
 
 onBeforeRouteLeave(async () => {

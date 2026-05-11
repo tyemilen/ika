@@ -4,8 +4,8 @@ const { data, status } = useLazyFetch('/api/users/@me/history');
 <template>
 	<h2>History</h2>
 
-	<div class="flex flex-col gap-2">
-		<div class="w-full flex gap-2" v-for="entry in data">
+	<div class="flex flex-col gap-4">
+		<div class="w-full flex gap-4" v-for="entry in data">
 			<div class="cover-md">
 				<BookCoverComponent :book-id="entry.book.id" :id="entry.book.coverId" />
 			</div>

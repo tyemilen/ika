@@ -225,19 +225,21 @@ const adminHide = async () => {
 		</div>
 	</template>
 
-	<Teleport to="body" v-if="book">
-		<CreateBookCharapterModal
-			:show="showCChapterModal"
-			:book-id="book.id"
-			@close="showCChapterModal = false"
-		/>
-	</Teleport>
-	<Teleport to="body" v-if="book">
-		<SaveBookModal
-			:show="showSaveModal"
-			:book="book"
-			:book-cover="primaryCover"
-			@close="showSaveModal = false"
-		/>
-	</Teleport>
+	<ClientOnly>
+		<Teleport to="body" v-if="book">
+			<CreateBookCharapterModal
+				:show="showCChapterModal"
+				:book-id="book.id"
+				@close="showCChapterModal = false"
+			/>
+		</Teleport>
+		<Teleport to="body" v-if="book">
+			<SaveBookModal
+				:show="showSaveModal"
+				:book="book"
+				:book-cover="primaryCover"
+				@close="showSaveModal = false"
+			/>
+		</Teleport>
+	</ClientOnly>
 </template>

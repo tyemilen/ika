@@ -11,14 +11,7 @@ const mainRef = useTemplateRef('main');
 			<div
 				class="flex flex-col gap-4 w-[95%] md:w-[70%] h-full relative centered pt-[calc(var(--header-height)+1.25rem)]"
 			>
-				<ClientOnly>
-					<slot />
-					<template #fallback>
-						<div class="w-full h-full flex items-center justify-center">
-							<div class="spinner"></div>
-						</div>
-					</template>
-				</ClientOnly>
+				<slot />
 			</div>
 		</div>
 		<BottomPanelComponent />

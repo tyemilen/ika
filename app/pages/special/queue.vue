@@ -17,19 +17,17 @@ const publishBook = async (index: number) => {
 
 	books.value![index]!.status = 'published';
 };
+const config = useRuntimeConfig();
 </script>
 <template>
-	<div
-		class="flex flex-col gap-4 justify-center w-[95%] md:w-[70%] centered pb-5"
-		:class="{ 'is-loading': status == 'pending' }"
-	>
+	<div class="flex flex-col gap-4 justify-center" :class="{ 'is-loading': status == 'pending' }">
 		<h2>Cool ass books</h2>
 
 		<div v-for="(draft, index) in books" class="flex w-full gap-2">
 			<div
 				class="cover-xs bg-cover shrink-0"
 				:style="{
-					backgroundImage: `url(http://localhost:8333/book-covers/${draft.id}/${draft.covers[0]!.id})`,
+					backgroundImage: `url(${config.public.coversCdnBase}/${draft.id}/${draft.covers[0]!.id})`,
 				}"
 			></div>
 			<div class="flex flex-1 flex-col gap-2">
