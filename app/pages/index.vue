@@ -104,7 +104,10 @@ const { data: lastBook } = useLazyFetch('/api/users/@me/history/last');
 		:to="`/books/${book.slug}`"
 		class="primary-container flex flex-col gap-2"
 	>
-		<h3>{{ index + 1 }}. {{ book.titles[0]?.content }}</h3>
+		<h3>
+			{{ index + 1 }}. {{ book.titles[0]?.content }}
+			<span class="font-mono text-sm font-normal secondary-container">{{ book.score }}</span>
+		</h3>
 		<div class="flex gap-4 items-start">
 			<BookCoverComponent
 				class="cover-md shrink-0"

@@ -28,7 +28,7 @@ const { user } = useUser();
 					<MenuComponent :name="`shelf-actions-${shelf.id}`" :stretch="false">
 						<template #activator>
 							<div
-								class="relative w-6 h-6 p-4 flex justify-center rounded-full items-center border border-(--text-placeholder)/20"
+								class="relative w-6 h-6 p-4 flex justify-center rounded-full items-center"
 							>
 								<span class="pi pi-ellipsis-v"></span>
 							</div>

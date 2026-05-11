@@ -70,6 +70,7 @@ export default defineEventHandler(async (event): Promise<UsersMeHistoryResponse>
 			timeSpent: h.timeSpent,
 			pageNumber: h.lastPage.number,
 			progress,
+			updatedAt: h.updatedAt.getTime(),
 		};
 	});
 });

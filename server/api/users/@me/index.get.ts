@@ -5,7 +5,6 @@ import { UsersMeResponse } from '~~/shared/schemas';
 export default defineEventHandler(async (event): Promise<UsersMeResponse> => {
 	const { user } = await requireUserSession(event);
 
-	console.log('user', user);
 	const userInfo = await event.context.db.query.users.findFirst({
 		where: (users, { eq }) => eq(users.id, user.id),
 	});
@@ -38,8 +37,6 @@ export default defineEventHandler(async (event): Promise<UsersMeResponse> => {
 		notifications,
 		and(eq(notifications.userId, userInfo.id), eq(notifications.isRead, false)),
 	);
-
-	console.log(JSON.stringify(event.context.session));
 
 	return {
 		id: userInfo.id,

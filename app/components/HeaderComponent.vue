@@ -84,7 +84,7 @@ onMounted(() => {
 		class="w-full shrink-0 flex justify-center z-100 transition-[background-color,opacity] h-(--header-height) top-0 left-0 right-0"
 		:class="{ 'header-active': isScrolled && fixed, fixed: fixed }"
 	>
-		<div class="h-full flex items-center justify-center header w-full gap-5">
+		<div class="h-full flex items-center justify-center header w-full gap-5 px-2 md:px-0">
 			<RouterLink to="/">
 				<SquidIcon class="w-12 h-12" />
 			</RouterLink>
@@ -108,14 +108,13 @@ onMounted(() => {
 				</div>
 			</div>
 			<div class="flex gap-2">
-				<ClientOnly v-if="loggedIn">
-					<div
-						class="w-12 h-12 cursor-pointer bg-(--bg-primary)/50 rounded-full flex items-center justify-center backdrop-blur-xs"
-						@click="panel.open()"
-					>
-						<span class="pi pi-bars"></span>
-					</div>
-				</ClientOnly>
+				<div
+					v-if="loggedIn"
+					class="w-12 h-12 cursor-pointer bg-(--bg-primary)/50 rounded-full flex items-center justify-center backdrop-blur-xs"
+					@click="panel.open()"
+				>
+					<span class="pi pi-bars"></span>
+				</div>
 				<button v-else @click="showLogin = true">login</button>
 			</div>
 		</div>

@@ -22,7 +22,7 @@ const config = useRuntimeConfig();
 	>
 		<h2>Your cool ass books</h2>
 
-		<div v-for="(draft, index) in drafts" class="flex w-full gap-2">
+		<div v-for="(draft, index) in drafts" class="flex w-full gap-4">
 			<div
 				class="cover-xs bg-cover shrink-0"
 				:style="{
@@ -30,8 +30,8 @@ const config = useRuntimeConfig();
 				}"
 			></div>
 			<div class="flex flex-1 flex-col gap-2">
-				<div class="flex justify-between items-center gap-2 break-all">
-					<div class="flex gap-2">
+				<div class="flex justify-between items-center break-all">
+					<div class="flex flex-col gap-2">
 						<span
 							:class="[
 								'fi',
@@ -44,7 +44,7 @@ const config = useRuntimeConfig();
 					<MenuComponent :name="`draft-actions-${draft.id}`">
 						<template #activator>
 							<div
-								class="relative w-6 h-6 p-4 flex justify-center rounded-full items-center border border-(--text-placeholder)/20"
+								class="relative w-6 h-6 p-4 flex justify-center rounded-full items-center"
 							>
 								<span class="pi pi-ellipsis-v"></span>
 							</div>

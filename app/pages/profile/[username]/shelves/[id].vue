@@ -7,11 +7,8 @@ const id = computed(() => route.params.id as string);
 const { data: shelf, status } = useLazyFetch<LibraryShelfResponse>(`/api/library/${id.value}`);
 </script>
 <template>
-	<div
-		class="flex flex-col gap-4 self-start w-[95%] md:w-[70%] centered"
-		:class="{ 'is-loading': status == 'pending' }"
-	>
-		<div class="flex gap-2">
+	<div class="flex flex-col gap-4" :class="{ 'is-loading': status == 'pending' }">
+		<div class="flex gap-4">
 			<ShelfCoverComponent
 				v-if="shelf"
 				class="cover-md"

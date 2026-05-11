@@ -11,6 +11,7 @@ export type UsersMeHistoryEntryResponse = {
 	timeSpent: number;
 	pageNumber: number;
 	progress: number;
+	updatedAt: number;
 };
 
 export type UsersMeHistoryResponse = UsersMeHistoryEntryResponse[];

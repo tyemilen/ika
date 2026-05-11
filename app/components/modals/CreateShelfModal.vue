@@ -10,15 +10,6 @@ const emit = defineEmits<{
 	close: [];
 }>();
 
-const isLocked = useScrollLock(document.body);
-
-watchEffect(() => (isLocked.value = show));
-
-const dialog = useTemplateRef('dialog');
-onClickOutside(dialog, () => emit('close'), {
-	ignore: ['.notification'],
-});
-
 const shelfData = ref<Partial<LibraryShelfPostBody>>({
 	name: undefined,
 	cover: undefined,
@@ -57,6 +48,16 @@ const createShelf = () => {
 		body: formData,
 	});
 };
+onMounted(() => {
+	const isLocked = useScrollLock(document.body);
+
+	watchEffect(() => (isLocked.value = show));
+
+	const dialog = useTemplateRef<HTMLDivElement>('dialog');
+	onClickOutside(dialog, () => emit('close'), {
+		ignore: ['.notification'],
+	});
+});
 </script>
 <template>
 	<Transition name="modal">
