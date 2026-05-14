@@ -1,0 +1,9 @@
+Advanced search
+Comment replies, likes/dislikes
+Book editing w/history
+Book scrape requests
+Chapter editing w/history
+Reviews
+Properly architecture scrapers
+Export as a zip and import
+Shelf following

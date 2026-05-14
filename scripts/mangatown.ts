@@ -1,19 +1,17 @@
 import * as cheerio from 'cheerio';
 import { Impit } from 'impit';
 
-// --- Global API Configurations ---
 const API_BASE = 'http://localhost:3000';
 const API_TOKEN = process.env.API_TOKEN || 'das';
-const DOMAIN = 'mangatown.com';
 
 if (!API_TOKEN) {
 	throw new Error('Missing API_TOKEN');
 }
 
 const client = new Impit();
+
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
-// --- Shared Utility Functions ---
 const robustFetch = async (
 	url: string,
 	options: RequestInit = {},
@@ -27,6 +25,7 @@ const robustFetch = async (
 					'User-Agent':
 						'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36',
 					'Accept-Language': 'en-US;q=0.7,en;q=0.3',
+					Cookie: 'mangatown_template_desk=yes',
 					...(options.headers || {}),
 				},
 				timeout: 30000,
@@ -38,12 +37,22 @@ const robustFetch = async (
 
 			return res;
 		} catch (err) {
-			if (i === retries - 1) throw err;
+			const isLastRetry = i === retries - 1;
+
+			if (isLastRetry) {
+				throw err;
+			}
+
 			const waitTime = Math.pow(2, i) * 1000 + Math.random() * 1000;
-			console.warn(`[Retry ${i + 1}/${retries}] Failed to fetch ${url}. Retrying...`);
+
+			console.warn(
+				`[Retry ${i + 1}/${retries}] Failed to fetch ${url}. Retrying in ${Math.round(waitTime)}ms...`,
+			);
+
 			await sleep(waitTime);
 		}
 	}
+
 	throw new Error('Unreachable');
 };
 
@@ -54,85 +63,114 @@ const fetchJSON = async (url: string) => {
 
 const downloadBuffer = async (url: string, referer?: string) => {
 	const res = await robustFetch(url, {
-		headers: { Referer: referer || url },
+		headers: {
+			Referer: referer || url,
+		},
 	});
+
 	return new Uint8Array(await res.arrayBuffer());
 };
 
-const absolute = (url: string, base: string = DOMAIN): string => {
+let META: any;
+
+const loadMeta = async () => {
+	META = await fetchJSON(`${API_BASE}/api/meta`);
+};
+
+const absolute = (url: string, base: string) => {
 	if (!url) return '';
+
 	if (url.startsWith('http')) return url;
-	if (url.startsWith('//')) return 'https:' + url;
-	return new URL(url, base.startsWith('http') ? base : `https://${base}`).toString();
+
+	if (url.startsWith('//')) {
+		return 'https:' + url;
+	}
+
+	return new URL(url, base).toString();
 };
 
 const normalizeStatus = (status: string) => {
 	const s = status.toLowerCase();
-	if (s.includes('completed') || s.includes('finish')) return 'completed';
-	if (s.includes('ongoing')) return 'ongoing';
+
+	if (s.includes('completed') || s.includes('finish') || s.includes('заверш')) {
+		return 'completed';
+	}
+
+	if (s.includes('hiatus') || s.includes('paused') || s.includes('заморож')) {
+		return 'paused';
+	}
+
+	if (s.includes('cancel') || s.includes('dropped') || s.includes('брош')) {
+		return 'cancelled';
+	}
+
 	return 'ongoing';
 };
 
-const scrapeMangaTown = async (url: string) => {
+const scrapeManga = async (url: string) => {
 	const res = await robustFetch(url);
 	const html = await res.text();
+
 	const $ = cheerio.load(html);
 
-	console.log(html);
 	const root = $('section.main div.article_content').first();
+
 	if (!root.length) {
-		throw new Error('Cannot find manga details container');
+		throw new Error('Cannot find manga root metadata blocks');
 	}
 
-	const infoRoot = root.find('div.detail_info ul').first();
-	const title =
-		root.find('h1.title-top').text().trim() || $('h1').first().text().trim() || 'Untitled';
+	const infoList = root.find('div.detail_info ul');
+
+	const title = $('h1.title-top').first().text().trim() || 'Untitled';
+
 	const coverUrl = absolute(root.find('div.detail_info img').first().attr('src') || '', url);
-	const description = infoRoot.find('#show').first().text().trim() || title;
+	const description = infoList.find('#show').first().text().trim() || title;
 
 	let author = 'Unknown';
 	let rawStatus = '';
 	const rawTags: string[] = [];
 
-	infoRoot.find('li').each((_, el) => {
+	infoList.find('li').each((_, el) => {
 		const text = $(el).text();
-		if (text.startsWith('Author:')) {
-			author = text.substring(7).replace('Author:', '').trim();
+		const bText = $(el).find('b').text().trim();
+
+		if (bText.includes('Author(s):')) {
+			author = text.replace('Author(s):', '').trim();
 		}
-		if (text.startsWith('Status:')) {
-			rawStatus = text;
+		if (bText.includes('Status(s):')) {
+			rawStatus = text.replace('Status(s):', '').trim();
 		}
-		if (text.startsWith('Genre(s):')) {
+		if (bText.includes('Genre(s):')) {
 			$(el)
 				.find('a')
-				.each((_, tagEl) => {
-					rawTags.push($(tagEl).text().trim().toLowerCase());
+				.each((_, aEl) => {
+					rawTags.push($(aEl).text().trim().toLowerCase());
 				});
 		}
 	});
 
 	const chapters: any[] = [];
+
 	root.find('div.chapter_content ul.chapter_list li')
 		.toArray()
 		.reverse()
 		.forEach((el, index) => {
-			const li = $(el);
-			const a = li.find('a').first();
+			const a = $(el).find('a').first();
 			const href = absolute(a.attr('href') || '', url);
 
-			const nameSegments: string[] = [];
-			li.find('span').each((_, spanEl) => {
-				const span = $(spanEl);
-				if (!span.attr('class')) {
-					nameSegments.push(span.text().trim());
-				}
-			});
+			const nameSpans: string[] = [];
+			$(el)
+				.find('span')
+				.each((_, spanEl) => {
+					if (!$(spanEl).attr('class')) {
+						nameSpans.push($(spanEl).text().trim());
+					}
+				});
 
-			const combinedName = nameSegments.filter(Boolean).join(' - ').trim();
-			const finalName = combinedName.length > 0 ? combinedName : `${title} - ${index + 1}`;
+			const titleName = nameSpans.filter(Boolean).join(' - ').trim() || a.text().trim();
 
 			chapters.push({
-				title: finalName,
+				title: titleName,
 				url: href,
 				number: index + 1,
 			});
@@ -152,55 +190,57 @@ const scrapeMangaTown = async (url: string) => {
 const fetchPages = async (chapterUrl: string) => {
 	const res = await robustFetch(chapterUrl);
 	const html = await res.text();
+
 	const $ = cheerio.load(html);
 
 	const pages: string[] = [];
+
 	$('div.page_select select')
 		.first()
 		.find('option')
 		.each((_, el) => {
 			const value = $(el).attr('value');
+
 			if (!value || value.endsWith('featured.html')) return;
+
 			pages.push(absolute(value, chapterUrl));
 		});
 
 	return [...new Set(pages)];
 };
 
-const fetchPageImage = async (pageUrl: string) => {
+const fetchPageImage = async (pageUrl: string, chapterUrl: string) => {
 	const res = await robustFetch(pageUrl);
 	const html = await res.text();
+
 	const $ = cheerio.load(html);
 
 	const img = $('#image').attr('src');
+
 	if (!img) {
-		throw new Error(`Page image selector altered for URL: ${pageUrl}`);
+		throw new Error(`Page image selector target not found: ${pageUrl}`);
 	}
+
 	return absolute(img, pageUrl);
-};
-
-// --- Engine Core Loop Execution Workflow ---
-let META: any;
-
-const loadMeta = async () => {
-	META = await fetchJSON(`${API_BASE}/api/meta`);
 };
 
 const run = async () => {
 	const [, , url] = process.argv;
+
 	if (!url) {
-		throw new Error('Missing target execution parameters URL path.');
+		throw new Error('Missing URL');
 	}
 
 	await loadMeta();
-	console.log('Scraping MangaTown Content Structure...');
-	const manga = await scrapeMangaTown(url);
+
+	console.log('Scraping MangaTown...');
+
+	const manga = await scrapeManga(url);
 
 	const langId = META.languages.find((l: any) => l.code === 'en')?.id;
+
 	if (!langId) {
-		throw new Error(
-			'Missing active runtime language maps configurations configuration contexts.',
-		);
+		throw new Error('Could not find language ID in meta');
 	}
 
 	const genres: string[] = [];
@@ -208,9 +248,11 @@ const run = async () => {
 
 	for (const name of manga.rawTags) {
 		const g = META.genres.find((x: any) => x.name.toLowerCase() === name);
+
 		if (g) genres.push(g.id);
 
 		const th = META.themes.find((x: any) => x.name.toLowerCase() === name);
+
 		if (th) themes.push(th.id);
 	}
 
@@ -218,29 +260,38 @@ const run = async () => {
 		genres.push(META.genres[0].id);
 	}
 
-	console.log('Downloading remote cover payload vectors...');
+	console.log('Downloading cover...');
+	console.log(manga);
 	if (!manga.coverUrl) {
-		throw new Error('Target mapping item cover identifier missing context.');
+		throw new Error('No cover found');
 	}
 
 	const coverBuf = await downloadBuffer(manga.coverUrl, url);
+
 	const coverFile = new File([new Blob([coverBuf])], 'cover.jpg', {
 		type: 'image/jpeg',
 	});
 
-	console.log('Posting core item parameters context records creation schema structure...');
+	console.log('Creating book...');
+
 	const form = new FormData();
+
 	form.append('title', manga.title);
 	form.append('titleLang', langId);
 	form.append('language', langId);
 	form.append('publicationYear', String(new Date().getFullYear()));
+
 	form.append('authorsIds', JSON.stringify([]));
 	form.append('authorsNames', JSON.stringify([manga.author]));
+
 	form.append('artistsIds', JSON.stringify([]));
 	form.append('artistsNames', JSON.stringify([manga.author]));
+
 	form.append('genres', JSON.stringify(genres));
 	form.append('themes', JSON.stringify(themes));
+
 	form.append('titles', JSON.stringify([]));
+
 	form.append(
 		'descriptions',
 		JSON.stringify([
@@ -250,47 +301,53 @@ const run = async () => {
 			},
 		]),
 	);
+
 	form.append('publicationStatus', JSON.stringify(manga.status));
 	form.append('cover', coverFile);
 
 	const res = await robustFetch(`${API_BASE}/api/books`, {
 		method: 'POST',
-		headers: { Authorization: `Bearer ${API_TOKEN}` },
+		headers: {
+			Authorization: `Bearer ${API_TOKEN}`,
+		},
 		body: form,
 	});
 
 	if (!res.ok) {
 		const err = await res.text();
-		console.error('Schema Validation Tracking Context Core Interrupted:', err);
-		throw new Error(`Execution error context code verification fault: ${res.status}`);
+		console.error('Schema Validation Error:', err);
+		throw new Error(`Book creation failed: ${res.status}`);
 	}
 
 	const bookId = (await res.json()).id;
 
-	// Dynamic multi-stage state confirmation transitions matching execution guidelines
 	await robustFetch(`${API_BASE}/api/books/drafts/${bookId}/publish`, {
 		method: 'PATCH',
-		headers: { Authorization: `Bearer ${API_TOKEN}` },
+		headers: {
+			Authorization: `Bearer ${API_TOKEN}`,
+		},
 	});
 
 	await robustFetch(`${API_BASE}/api/special/drafts/${bookId}/publish`, {
 		method: 'PATCH',
-		headers: { Authorization: `Bearer ${API_TOKEN}` },
+		headers: {
+			Authorization: `Bearer ${API_TOKEN}`,
+		},
 	});
 
-	console.log('Book ID Successfully Configured:', bookId);
+	console.log('Book ID:', bookId);
 
-	// Processing iterative subfile pages collection pipeline arrays sequence mapping segments
 	for (const ch of manga.chapters) {
 		try {
-			console.log(
-				`Processing operational ingestion sequences tracking segment: ${ch.title}...`,
-			);
+			console.log(`Processing ${ch.title}...`);
+
 			const pages = await fetchPages(ch.url);
+
 			const files: File[] = [];
 
 			for (let i = 0; i < pages.length; i++) {
-				const imageUrl = await fetchPageImage(pages[i]);
+				const imageUrl = await fetchPageImage(pages[i], ch.url);
+
 				const buf = await downloadBuffer(imageUrl, ch.url);
 
 				files.push(
@@ -298,10 +355,12 @@ const run = async () => {
 						type: 'image/jpeg',
 					}),
 				);
+
 				await sleep(300);
 			}
 
 			const chForm = new FormData();
+
 			chForm.append('number', String(ch.number));
 			chForm.append('volume', '0');
 			chForm.append('name', ch.title);
@@ -313,27 +372,27 @@ const run = async () => {
 
 			const uploadRes = await robustFetch(`${API_BASE}/api/books/${bookId}/chapter`, {
 				method: 'POST',
-				headers: { Authorization: `Bearer ${API_TOKEN}` },
+				headers: {
+					Authorization: `Bearer ${API_TOKEN}`,
+				},
 				body: chForm,
 			});
 
 			if (!uploadRes.ok) {
-				throw new Error(
-					`Failed to upload chapter sequence tracker reference index: ${ch.number}`,
-				);
+				throw new Error(`Failed to upload chapter ${ch.number}`);
 			}
 
-			console.log(`Successfully Uploaded segment data targets: ${ch.title}`);
-			await sleep(1000);
-		} catch (error) {
-			console.error(
-				`CRITICAL: Failed to process ${ch.title}. Skipping to next segment tracker item element.`,
-				error,
-			);
+			console.log(`Successfully Uploaded ${ch.title}`);
+			await sleep(500);
+		} catch (chErr) {
+			console.error(`Error passing chapter ${ch.title}:`, chErr);
 		}
 	}
 
-	console.log('All tracking operational context entries loops parsed entirely.');
+	console.log('Scraping process complete.');
 };
 
-run().catch(console.error);
+run().catch((e) => {
+	console.error(e);
+	process.exit(1);
+});

@@ -58,8 +58,8 @@ export interface BaseBookResponse {
 	authors?: string[];
 	artists?: string[];
 
-	createdAt?: Date;
-	updatedAt?: Date;
+	createdAt?: number;
+	updatedAt?: number;
 
 	chapters?: BaseChapterResponse[];
 }

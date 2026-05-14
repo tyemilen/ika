@@ -71,9 +71,7 @@ export const useGateway = createGlobalState(() => {
 	});
 
 	onMounted(async () => {
-		console.log('dasdsadas', loggedIn.value, elector.isLeader);
-
-		await elector.awaitLeadership();
+		// await elector.awaitLeadership();
 		await until(loggedIn).toBe(true);
 
 		const state = useGlobalState();

@@ -91,8 +91,8 @@ const { data: lastBook } = useLazyFetch('/api/users/@me/history/last');
 	</div>
 
 	<div class="flex flex-col md:flex-row gap-4 w-full" v-if="chapters">
-		<BookSectionVertiComponent class="w-full md:w-1/2" :chapters="chapters[0]" />
-		<BookSectionVertiComponent
+		<ChaptersSectionVertiComponent class="w-full md:w-1/2" :chapters="chapters[0]" />
+		<ChaptersSectionVertiComponent
 			class="w-full md:w-1/2"
 			v-if="chapters[1].length"
 			:chapters="chapters[1]"

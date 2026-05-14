@@ -58,7 +58,6 @@ export default defineEventHandler(async (event): Promise<BooksFeedResponse> => {
 			},
 		},
 	});
-
 	const fresh = freshRaw.map((b) => ({
 		id: b.id,
 		slug: b.slug,

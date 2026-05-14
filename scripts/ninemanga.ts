@@ -220,11 +220,9 @@ const run = async () => {
 
 	const manga = await scrapeManga(url);
 
-	const russianLangId =
-		META.languages.find((l: any) => l.code === 'ru')?.id ||
-		META.languages.find((l: any) => l.code === 'en')?.id;
+	const langId = META.languages.find((l: any) => l.code === 'en')?.id;
 
-	if (!russianLangId) {
+	if (!langId) {
 		throw new Error('Could not find language ID in meta');
 	}
 
@@ -262,8 +260,8 @@ const run = async () => {
 	const form = new FormData();
 
 	form.append('title', manga.title);
-	form.append('titleLang', russianLangId);
-	form.append('language', russianLangId);
+	form.append('titleLang', langId);
+	form.append('language', langId);
 	form.append('publicationYear', String(new Date().getFullYear()));
 
 	form.append('authorsIds', JSON.stringify([]));
@@ -284,7 +282,7 @@ const run = async () => {
 		'descriptions',
 		JSON.stringify([
 			{
-				language: russianLangId,
+				language: langId,
 				content: manga.description || manga.title,
 			},
 		]),
@@ -358,7 +356,7 @@ const run = async () => {
 
 			chForm.append('name', ch.title);
 
-			chForm.append('language', russianLangId);
+			chForm.append('language', langId);
 
 			for (const f of files) {
 				chForm.append('pages', f);
